@@ -72,6 +72,12 @@
         ::-webkit-scrollbar-track { background: #1e293b; }
         ::-webkit-scrollbar-thumb { background-color: #4f46e5; border-radius: 10px; border: 2px solid #1e293b; }
         ::-webkit-scrollbar-thumb:hover { background-color: #6366f1; }
+
+        /* Custom input styles for date picker icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" viewBox="0 0 24 24"><path fill="%239ca3af" d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z"/></svg>') no-repeat;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="text-slate-200">
@@ -123,37 +129,37 @@
                 <h2 class="text-4xl font-bold font-serif mb-8 text-white">Settings</h2>
                 
                 <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg mb-8 border border-slate-700">
-                    <h3 class="text-2xl font-semibold font-serif mb-4 text-indigo-300">User Profiles</h3>
-                    <div class="space-y-6" id="settings-form">
+                    <h3 class="text-2xl font-semibold font-serif mb-6 text-indigo-300">User Profiles</h3>
+                    <form id="settings-form" class="space-y-6">
                         <!-- User 1 -->
                         <div class="p-4 border border-slate-700 rounded-lg bg-slate-900/30">
-                            <h4 class="font-semibold text-lg mb-3 text-blue-400">User 1</h4>
+                            <h4 class="font-semibold text-lg mb-4 text-blue-400">User 1</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                <div>
-                                   <label for="user1Name" class="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                                   <input id="user1Name" name="user1Name" class="form-input" />
+                                   <label for="user1Name" class="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                                   <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg></div><input id="user1Name" name="user1Name" class="form-input pl-10" /></div>
                                </div>
                                <div>
-                                   <label for="user1Base" class="block text-sm font-medium text-slate-300 mb-1">Home Base</label>
-                                   <input id="user1Base" name="user1Base" class="form-input" />
+                                   <label for="user1Base" class="block text-sm font-medium text-slate-300 mb-2">Home Base</label>
+                                   <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg></div><input id="user1Base" name="user1Base" class="form-input pl-10" /></div>
                                </div>
                             </div>
                         </div>
                         <!-- User 2 -->
                         <div class="p-4 border border-slate-700 rounded-lg bg-slate-900/30">
-                            <h4 class="font-semibold text-lg mb-3 text-pink-400">User 2</h4>
+                            <h4 class="font-semibold text-lg mb-4 text-pink-400">User 2</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                <div>
-                                   <label for="user2Name" class="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                                   <input id="user2Name" name="user2Name" class="form-input" />
+                                   <label for="user2Name" class="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                                   <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg></div><input id="user2Name" name="user2Name" class="form-input pl-10" /></div>
                                </div>
                                <div>
-                                   <label for="user2Base" class="block text-sm font-medium text-slate-300 mb-1">Home Base</label>
-                                   <input id="user2Base" name="user2Base" class="form-input" />
+                                   <label for="user2Base" class="block text-sm font-medium text-slate-300 mb-2">Home Base</label>
+                                   <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg></div><input id="user2Base" name="user2Base" class="form-input pl-10" /></div>
                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                      <div class="mt-6 flex justify-end">
                         <button id="save-settings-btn" class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 btn-glow">Save Settings</button>
                     </div>
@@ -383,12 +389,21 @@
                            }).join('')}
                         </div>
                         <div class="mt-6 border-t border-slate-700 pt-4">
-                             <h4 class="font-semibold mb-2 text-white">Add New Item</h4>
-                             <form id="add-prep-item-form" class="space-y-3">
-                                 <input name="task" placeholder="e.g., Book travel insurance" class="form-input" required />
-                                 <div class="grid grid-cols-2 gap-2">
-                                    <select name="category" class="form-input">${categories.map(c => `<option>${c}</option>`).join('')}</select>
-                                    <select name="assignedTo" class="form-input"><option value="${user1.name}">${user1.name}</option><option value="${user2.name}">${user2.name}</option></select>
+                             <h4 class="font-semibold mb-3 text-white">Add New Item</h4>
+                             <form id="add-prep-item-form" class="space-y-4">
+                                 <div>
+                                     <label for="prepTask" class="block text-sm font-medium text-slate-300 mb-2">Task</label>
+                                     <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg></div><input id="prepTask" name="task" placeholder="e.g., Book travel insurance" class="form-input pl-10" required /></div>
+                                 </div>
+                                 <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="prepCategory" class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                                        <select id="prepCategory" name="category" class="form-input">${categories.map(c => `<option>${c}</option>`).join('')}</select>
+                                    </div>
+                                    <div>
+                                        <label for="prepAssignedTo" class="block text-sm font-medium text-slate-300 mb-2">Assign to</label>
+                                        <select id="prepAssignedTo" name="assignedTo" class="form-input"><option value="${user1.name}">${user1.name}</option><option value="${user2.name}">${user2.name}</option></select>
+                                    </div>
                                  </div>
                                  <button type="submit" class="form-button-secondary w-full">Add to Checklist</button>
                              </form>
@@ -407,6 +422,11 @@
                                 <p class="text-lg text-indigo-300 mt-1">${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}</p>
                             </div>
                         </div>
+                        <div class="absolute top-6 right-6 z-10">
+                           <button id="edit-trip-btn" class="p-2 bg-slate-800/60 backdrop-blur-sm rounded-full text-slate-300 hover:text-white hover:bg-slate-700/80 transition-all">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                           </button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-2 space-y-8">${itineraryHTML}</div>
@@ -418,6 +438,9 @@
                         </div>
                     </div>
                 `;
+                // **THE FIX IS HERE**
+                // Apply styles to the newly rendered content, including the pre-trip form.
+                applyFormStyles(container);
             };
 
             const renderSettings = () => {
@@ -450,6 +473,15 @@
                     modalContent.innerHTML = '';
                 }, 300);
             };
+            
+            const applyFormStyles = (containerElement) => {
+                 containerElement.querySelectorAll('.form-input').forEach(el => { 
+                    const hasIcon = el.classList.contains('pl-10');
+                    el.className = formInputClasses + (hasIcon ? " pl-10" : ""); 
+                 });
+                 containerElement.querySelectorAll('.form-button-primary').forEach(el => el.className = formButtonPrimaryClasses);
+                 containerElement.querySelectorAll('.form-button-secondary').forEach(el => el.className = formButtonSecondaryClasses);
+            }
 
             document.getElementById('modal-close-btn').onclick = closeModal;
             modalContainer.onclick = (e) => { if(e.target === modalContainer) closeModal(); };
@@ -483,15 +515,13 @@
                                 <div>
                                     <label for="startDate" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
                                     <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg></div>
-                                        <input id="startDate" name="startDate" type="date" class="form-input pl-10" required />
+                                        <input id="startDate" name="startDate" type="date" class="form-input" required />
                                     </div>
                                 </div>
                                 <div>
                                     <label for="endDate" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
                                     <div class="relative">
-                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg></div>
-                                        <input id="endDate" name="endDate" type="date" class="form-input pl-10" required />
+                                        <input id="endDate" name="endDate" type="date" class="form-input" required />
                                     </div>
                                 </div>
                             </div>
@@ -507,9 +537,40 @@
                             <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary w-full sm:w-auto">Create Trip</button></div>
                         </form>
                     `);
-                    // We must apply the styles again for the dynamically created inputs
-                    document.querySelectorAll('#add-trip-form .form-input').forEach(el => { if(!el.classList.contains('pl-10')) el.className = formInputClasses; else el.className = formInputClasses + " pl-10"; });
-                    document.querySelector('#add-trip-form .form-button-primary').className = formButtonPrimaryClasses;
+                    applyFormStyles(document.getElementById('modal-box'));
+                } else if (e.target.closest('#edit-trip-btn')) {
+                    const trip = state.trips.find(t => t.id === state.selectedTripId);
+                    if (!trip) return;
+                    openModal('Edit Trip Details', `
+                        <form id="edit-trip-form" class="space-y-6">
+                            <div>
+                                <label for="destination" class="block text-sm font-medium text-slate-300 mb-2">Destination</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path></svg></div>
+                                    <input id="destination" name="destination" value="${trip.destination}" class="form-input pl-10" required />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="startDate" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
+                                    <input id="startDate" name="startDate" type="date" value="${trip.startDate}" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label for="endDate" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
+                                    <input id="endDate" name="endDate" type="date" value="${trip.endDate}" class="form-input" required />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="bannerImage" class="block text-sm font-medium text-slate-300 mb-2">Banner Image URL</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg></div>
+                                    <input id="bannerImage" name="bannerImage" value="${trip.bannerImage}" class="form-input pl-10" />
+                                </div>
+                            </div>
+                            <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary w-full sm:w-auto">Save Changes</button></div>
+                        </form>
+                    `);
+                    applyFormStyles(document.getElementById('modal-box'));
                 }
 
                 // Settings actions
@@ -547,39 +608,15 @@
                         return day;
                     };
                     
-                    if (action === 'add-event') {
-                        openModal('Add Itinerary Event', `
-                            <form id="add-event-form" data-day-date="${dayDate}" class="space-y-6">
+                    if (action === 'add-event' || action === 'edit-event') {
+                         const isEdit = action === 'edit-event';
+                         const event = isEdit ? getDay(dayDate).events.find(e => e.id == eventId) : {};
+                         openModal(isEdit ? 'Edit Event' : 'Add Event', `
+                            <form id="${isEdit ? 'edit-event-form' : 'add-event-form'}" data-day-date="${dayDate}" ${isEdit ? `data-event-id="${eventId}"` : ''} class="space-y-6">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label for="eventTime" class="block text-sm font-medium text-slate-300 mb-2">Time</label>
-                                        <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg></div><input id="eventTime" name="time" type="time" class="form-input pl-10" required /></div>
-                                    </div>
-                                    <div>
-                                        <label for="eventType" class="block text-sm font-medium text-slate-300 mb-2">Type</label>
-                                        <select id="eventType" name="type" class="form-input"><option>Activity</option><option>Travel</option><option>Accommodation</option></select>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label for="eventDetails" class="block text-sm font-medium text-slate-300 mb-2">Details</label>
-                                    <input id="eventDetails" name="details" placeholder="e.g., Visit the Eiffel Tower" class="form-input" required />
-                                </div>
-                                <div>
-                                    <label for="eventNotes" class="block text-sm font-medium text-slate-300 mb-2">Notes <span class="text-xs text-slate-400">(Optional)</span></label>
-                                    <input id="eventNotes" name="notes" placeholder="e.g., Booking ref, address, etc." class="form-input" />
-                                </div>
-                                <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary">Add Event</button></div>
-                            </form>
-                        `);
-                    } else if (action === 'edit-event') {
-                        const day = getDay(dayDate);
-                        const event = day.events.find(e => e.id == eventId);
-                        openModal('Edit Itinerary Event', `
-                            <form id="edit-event-form" data-day-date="${dayDate}" data-event-id="${eventId}" class="space-y-6">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="eventTime" class="block text-sm font-medium text-slate-300 mb-2">Time</label>
-                                        <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg></div><input id="eventTime" name="time" type="time" class="form-input pl-10" value="${event.time}" required /></div>
+                                        <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg></div><input id="eventTime" name="time" type="time" class="form-input pl-10" value="${event.time || ''}" required /></div>
                                     </div>
                                     <div>
                                         <label for="eventType" class="block text-sm font-medium text-slate-300 mb-2">Type</label>
@@ -592,20 +629,16 @@
                                 </div>
                                 <div>
                                     <label for="eventDetails" class="block text-sm font-medium text-slate-300 mb-2">Details</label>
-                                    <input id="eventDetails" name="details" placeholder="e.g., Visit the Eiffel Tower" class="form-input" value="${event.details}" required />
+                                    <input id="eventDetails" name="details" placeholder="e.g., Visit the Eiffel Tower" class="form-input" value="${event.details || ''}" required />
                                 </div>
                                 <div>
                                     <label for="eventNotes" class="block text-sm font-medium text-slate-300 mb-2">Notes <span class="text-xs text-slate-400">(Optional)</span></label>
                                     <input id="eventNotes" name="notes" placeholder="e.g., Booking ref, address, etc." class="form-input" value="${event.notes || ''}" />
                                 </div>
-                                <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary">Save Changes</button></div>
+                                <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary">${isEdit ? 'Save Changes' : 'Add Event'}</button></div>
                             </form>
                         `);
-                    } 
-                    if (action === 'add-event' || action === 'edit-event') {
-                        // Re-apply styles for dynamically generated modals
-                        document.querySelectorAll('.modal-box .form-input').forEach(el => { if(!el.classList.contains('pl-10')) el.className = formInputClasses; else el.className = formInputClasses + " pl-10"; });
-                        document.querySelector('.modal-box .form-button-primary').className = formButtonPrimaryClasses;
+                         applyFormStyles(document.getElementById('modal-box'));
                     }
                     else if (action === 'delete-event') {
                          const day = getDay(dayDate);
@@ -647,6 +680,18 @@
                     saveState();
                     closeModal();
                     renderDashboard();
+                } else if (form.id === 'edit-trip-form') {
+                    const fd = new FormData(form);
+                    const tripToUpdate = state.trips.find(t => t.id === state.selectedTripId);
+                    if (tripToUpdate) {
+                        tripToUpdate.destination = fd.get('destination');
+                        tripToUpdate.startDate = fd.get('startDate');
+                        tripToUpdate.endDate = fd.get('endDate');
+                        tripToUpdate.bannerImage = fd.get('bannerImage');
+                        saveState();
+                        closeModal();
+                        renderTripDetail(tripToUpdate);
+                    }
                 } else if (form.id === 'add-prep-item-form') {
                     const fd = new FormData(form);
                     if (!trip.preTripChecklist) trip.preTripChecklist = [];
@@ -732,9 +777,7 @@
             const formButtonSecondaryClasses = "form-button-secondary bg-slate-700/50 border border-slate-600 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors";
             
             // Apply classes
-            document.querySelectorAll('.form-input').forEach(el => el.className = formInputClasses);
-            document.querySelectorAll('.form-button-primary').forEach(el => el.className = formButtonPrimaryClasses);
-            document.querySelectorAll('.form-button-secondary').forEach(el => el.className = formButtonSecondaryClasses);
+            applyFormStyles(document.body);
 
 
             loadState();
