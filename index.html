@@ -212,6 +212,11 @@
             // --- UI HELPERS ---
             const formatDate = (ds) => new Date(ds).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
             
+            // --- REUSABLE FORM STYLING CLASSES ---
+            const formInputClasses = "form-input w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 outline-none transition-shadow text-white";
+            const formButtonPrimaryClasses = "form-button-primary btn-press w-full sm:w-auto bg-violet-600 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_5px_15px_var(--glow-color)] hover:shadow-[0_8px_25px_var(--glow-color)] hover:-translate-y-1";
+            const formButtonSecondaryClasses = "form-button-secondary btn-press bg-slate-700/50 border border-slate-600 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors";
+
             // --- NAVIGATION ---
             const pages = document.querySelectorAll('.page');
             const navigate = (pageId, tripId = null) => {
@@ -298,8 +303,8 @@
                             <h5 class="font-semibold text-sm mb-3 text-slate-500 uppercase tracking-wider">Daily Checklist</h5>
                             <div class="space-y-2">${items}</div>
                             <form data-action="add-daily-check" data-day-date="${day.date}" class="flex gap-2 mt-3">
-                                <input name="task" placeholder="Add a quick task..." class="form-input text-sm flex-grow" required />
-                                <button type="submit" class="form-button-secondary">Add</button>
+                                <input name="task" placeholder="Add a quick task..." class="${formInputClasses} !py-1 !text-sm flex-grow" required />
+                                <button type="submit" class="${formButtonSecondaryClasses} !px-3 !py-1">Add</button>
                             </form>
                         </div>
                     `;
@@ -331,7 +336,7 @@
                                 ${day.events.length > 0 ? (day.events || []).sort((a,b) => a.time.localeCompare(b.time)).map(event => createEventHTML(event, day)).join('') : `<p class="text-center text-slate-500 py-4">No events planned for this day.</p>`}
                                 ${createDailyChecklistHTML(day)}
                                 <div class="pt-2">
-                                    <button data-action="add-event" data-day-date="${day.date}" class="form-button-secondary w-full">Add Event to Day ${day.day}</button>
+                                    <button data-action="add-event" data-day-date="${day.date}" class="${formButtonSecondaryClasses} w-full">Add Event to Day ${day.day}</button>
                                 </div>
                             </div>
                         </div>
@@ -367,26 +372,26 @@
                              <form id="add-prep-item-form" class="space-y-4">
                                  <div>
                                      <label for="prepTask" class="sr-only">Task</label>
-                                     <input id="prepTask" name="task" placeholder="e.g., Book travel insurance" class="form-input" required />
+                                     <input id="prepTask" name="task" placeholder="e.g., Book travel insurance" class="${formInputClasses}" required />
                                  </div>
                                  <div class="grid grid-cols-2 gap-4">
                                      <div>
                                          <label for="prepCategory" class="sr-only">Category</label>
-                                         <select id="prepCategory" name="category" class="form-input">${categories.map(c => `<option>${c}</option>`).join('')}</select>
+                                         <select id="prepCategory" name="category" class="${formInputClasses}">${categories.map(c => `<option>${c}</option>`).join('')}</select>
                                      </div>
                                      <div>
                                          <label for="prepAssignedTo" class="sr-only">Assign to</label>
-                                         <select id="prepAssignedTo" name="assignedTo" class="form-input"><option value="${user1.name}">${user1.name}</option><option value="${user2.name}">${user2.name}</option></select>
+                                         <select id="prepAssignedTo" name="assignedTo" class="${formInputClasses}"><option value="${user1.name}">${user1.name}</option><option value="${user2.name}">${user2.name}</option></select>
                                      </div>
                                  </div>
-                                 <button type="submit" class="form-button-secondary w-full">Add to Checklist</button>
+                                 <button type="submit" class="${formButtonSecondaryClasses} w-full">Add to Checklist</button>
                              </form>
                         </div>
                     </div>`
                 };
                 
                 container.innerHTML = `
-                    <button id="back-to-dashboard-btn" class="form-button-secondary mb-6">← Back to Dashboard</button>
+                    <button id="back-to-dashboard-btn" class="${formButtonSecondaryClasses} mb-6">← Back to Dashboard</button>
                     <div class="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8 shadow-xl group">
                         <img src="${trip.bannerImage}" alt="${trip.destination}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError="this.onerror=null;this.src='https://placehold.co/1200x400/1e1b4b/334155?text=Image+Not+Found';">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-6 md:p-8">
@@ -425,11 +430,11 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                    <div>
                                        <label for="user1Name" class="block text-sm font-medium text-slate-300 mb-2">Name</label>
-                                       <input id="user1Name" name="user1Name" class="form-input" />
+                                       <input id="user1Name" name="user1Name" class="${formInputClasses}" />
                                    </div>
                                    <div>
                                        <label for="user1Base" class="block text-sm font-medium text-slate-300 mb-2">Home Base</label>
-                                       <input id="user1Base" name="user1Base" class="form-input" />
+                                       <input id="user1Base" name="user1Base" class="${formInputClasses}" />
                                    </div>
                                 </div>
                             </div>
@@ -438,24 +443,24 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                    <div>
                                        <label for="user2Name" class="block text-sm font-medium text-slate-300 mb-2">Name</label>
-                                       <input id="user2Name" name="user2Name" class="form-input" />
+                                       <input id="user2Name" name="user2Name" class="${formInputClasses}" />
                                    </div>
                                    <div>
                                        <label for="user2Base" class="block text-sm font-medium text-slate-300 mb-2">Home Base</label>
-                                       <input id="user2Base" name="user2Base" class="form-input" />
+                                       <input id="user2Base" name="user2Base" class="${formInputClasses}" />
                                    </div>
                                 </div>
                             </div>
                          </form>
                          <div class="mt-6 flex justify-end">
-                            <button id="save-settings-btn" class="form-button-primary">Save Settings</button>
+                            <button id="save-settings-btn" class="${formButtonPrimaryClasses}">Save Settings</button>
                          </div>
                     </div>
                     <div class="glass-card p-6 rounded-2xl shadow-lg">
                         <h3 class="text-2xl font-semibold font-serif mb-4 text-violet-300">Data Management</h3>
                         <div class="flex flex-col sm:flex-row gap-4">
-                            <button id="export-data-btn" class="form-button-secondary w-full">Export Data</button>
-                            <label for="import-file" class="form-button-secondary w-full text-center cursor-pointer">
+                            <button id="export-data-btn" class="${formButtonSecondaryClasses} w-full">Export Data</button>
+                            <label for="import-file" class="${formButtonSecondaryClasses} w-full text-center cursor-pointer">
                                Import Data
                                <input type="file" id="import-file" accept=".json" class="hidden" />
                             </label>
@@ -488,11 +493,6 @@
 
             document.getElementById('modal-close-btn').onclick = closeModal;
             modalContainer.onclick = (e) => { if(e.target === modalContainer) closeModal(); };
-
-            // --- REUSABLE FORM STYLING CLASSES ---
-            const formInputClasses = "form-input w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 outline-none transition-shadow text-white";
-            const formButtonPrimaryClasses = "form-button-primary btn-press w-full sm:w-auto bg-violet-600 text-white px-6 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_5px_15px_var(--glow-color)] hover:shadow-[0_8px_25px_var(--glow-color)] hover:-translate-y-1";
-            const formButtonSecondaryClasses = "form-button-secondary btn-press bg-slate-700/50 border border-slate-600 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors";
 
             // --- EVENT LISTENERS ---
             document.querySelector('body').addEventListener('click', (e) => {
