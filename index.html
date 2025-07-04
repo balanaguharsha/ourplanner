@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companion's Atlas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom Styles & Animations for a "Fancy" Look */
+        :root {
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --brand-glow: 0 0 10px rgba(167, 139, 250, 0.5), 0 0 20px rgba(167, 139, 250, 0.3);
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: #0f172a; /* Slate 900 */
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
+            background-size: 2rem 2rem;
+        }
+
+        .font-serif { font-family: var(--font-serif); }
+
+        .btn-glow { box-shadow: var(--brand-glow); }
+        .btn-glow:hover { box-shadow: 0 0 15px rgba(167, 139, 250, 0.7), 0 0 30px rgba(167, 139, 250, 0.5); }
+
+        /* Page transition animation */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Card reveal animation */
+        .trip-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .trip-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal animation */
+        .modal-container {
+            transition: opacity 0.3s ease;
+        }
+        .modal-box {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform: scale(0.95);
+            opacity: 0;
+        }
+        .modal-container.open .modal-box {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background-color: #4f46e5; border-radius: 10px; border: 2px solid #1e293b; }
+        ::-webkit-scrollbar-thumb:hover { background-color: #6366f1; }
+    </style>
+</head>
+<body class="text-slate-200">
+
+    <!-- HEADER -->
+    <header class="bg-slate-900/70 backdrop-blur-lg shadow-2xl sticky top-0 z-40 border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center cursor-pointer" id="logo-button">
+                    <span class="text-3xl">🗺️</span>
+                    <h1 class="ml-3 text-2xl font-bold font-serif text-white tracking-wider">Companion's Atlas</h1>
+                </div>
+                <nav class="flex items-center gap-2">
+                    <button data-page="dashboard" class="nav-button text-slate-300 hover:text-white px-3 py-2 rounded-md transition-colors">Dashboard</button>
+                    <button data-page="settings" class="nav-button text-slate-300 hover:text-white px-3 py-2 rounded-md transition-colors">Settings</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboard-page" class="page">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+                <h2 class="text-4xl font-bold font-serif text-white">Your Journeys</h2>
+                <button id="add-trip-btn" class="w-full sm:w-auto bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1 btn-glow">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    Plan New Voyage
+                </button>
+            </div>
+            <section id="upcoming-trips-section">
+                <h3 class="text-2xl font-semibold font-serif text-indigo-300 border-b-2 border-indigo-500/30 pb-2 mb-6">Upcoming Voyages</h3>
+                <div id="upcoming-trips-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </section>
+            <section id="past-trips-section" class="mt-12">
+                <h3 class="text-2xl font-semibold font-serif text-slate-400 border-b-2 border-slate-700 pb-2 mb-6">Travelogue</h3>
+                <div id="past-trips-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+            </section>
+        </div>
+
+        <!-- TRIP DETAIL PAGE -->
+        <div id="trip-detail-page" class="page">
+            <!-- Content will be injected by JS -->
+        </div>
+
+        <!-- SETTINGS PAGE -->
+        <div id="settings-page" class="page">
+             <div class="max-w-2xl mx-auto">
+                <h2 class="text-4xl font-bold font-serif mb-8 text-white">Settings</h2>
+                
+                <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg mb-8 border border-slate-700">
+                    <h3 class="text-2xl font-semibold font-serif mb-4 text-indigo-300">User Profiles</h3>
+                    <div class="space-y-6" id="settings-form">
+                        <!-- User 1 -->
+                        <div class="p-4 border border-slate-700 rounded-lg bg-slate-900/30">
+                            <h4 class="font-semibold text-lg mb-3 text-blue-400">User 1</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div>
+                                   <label for="user1Name" class="block text-sm font-medium text-slate-300 mb-1">Name</label>
+                                   <input id="user1Name" name="user1Name" class="form-input" />
+                               </div>
+                               <div>
+                                   <label for="user1Base" class="block text-sm font-medium text-slate-300 mb-1">Home Base</label>
+                                   <input id="user1Base" name="user1Base" class="form-input" />
+                               </div>
+                            </div>
+                        </div>
+                        <!-- User 2 -->
+                        <div class="p-4 border border-slate-700 rounded-lg bg-slate-900/30">
+                            <h4 class="font-semibold text-lg mb-3 text-pink-400">User 2</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div>
+                                   <label for="user2Name" class="block text-sm font-medium text-slate-300 mb-1">Name</label>
+                                   <input id="user2Name" name="user2Name" class="form-input" />
+                               </div>
+                               <div>
+                                   <label for="user2Base" class="block text-sm font-medium text-slate-300 mb-1">Home Base</label>
+                                   <input id="user2Base" name="user2Base" class="form-input" />
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="mt-6 flex justify-end">
+                        <button id="save-settings-btn" class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 btn-glow">Save Settings</button>
+                    </div>
+                </div>
+    
+                <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700">
+                    <h3 class="text-2xl font-semibold font-serif mb-4 text-indigo-300">Data Management</h3>
+                    <p class="text-sm text-slate-400 mb-6">
+                        Your data is safe on this device. Export it for backup or to move to another device. Importing will overwrite all current data.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="export-data-btn" class="form-button-secondary w-full">Export Data</button>
+                        <label for="import-file" class="form-button-secondary w-full text-center cursor-pointer">
+                           Import Data
+                           <input type="file" id="import-file" accept=".json" class="hidden" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL CONTAINER -->
+    <div id="modal-container" class="fixed inset-0 bg-black/70 z-50 flex justify-center items-center p-4 backdrop-blur-sm hidden">
+        <div id="modal-box" class="bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg m-4">
+            <div class="flex justify-between items-center p-5 border-b border-slate-700">
+                <h3 id="modal-title" class="text-2xl font-semibold font-serif text-white"></h3>
+                <button id="modal-close-btn" class="text-slate-400 hover:text-white p-1 rounded-full transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-content" class="p-6">
+                <!-- Modal content injected by JS -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- STATE MANAGEMENT ---
+            let state = {};
+            const DUMMY_DATA = {
+                users: {
+                    user1: { name: "Harsha", homeBase: "London" },
+                    user2: { name: "Amitha", homeBase: "Poland" }
+                },
+                trips: [
+                    { id: "trip-paris-2025", destination: "Paris, France", startDate: "2025-08-10", endDate: "2025-08-17", bannerImage: "https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?w=800&auto=format&fit=crop", itinerary: [ { day: 1, date: "2025-08-10", events: [ { id: 1, type: "Travel", time: "09:00", details: "Harsha's Flight to CDG", notes: "Flight BA308 from LHR" }, { id: 3, type: "Accommodation", time: "15:00", details: "Check-in: Grand Hôtel du Palais Royal", notes: "Booking Ref: GHP-123XYZ" }, ], checklist: [ { id: 1, task: "Buy Navigo Découverte pass", completed: false }, ] }, { day: 2, date: "2025-08-11", events: [ { id: 4, type: "Activity", time: "10:00", details: "Visit the Louvre Museum", notes: "Priority tickets booked online." }, ], checklist: [] } ], preTripChecklist: [ { id: 1, category: "Way Before", task: "Confirm passports are valid", assignedTo: "Amitha", completed: true }, { id: 2, category: "1 Month Before", task: "Book main flights", assignedTo: "Harsha", completed: true }, ] },
+                    { id: "trip-japan-2024", destination: "Kyoto, Japan", startDate: "2024-04-05", endDate: "2024-04-15", bannerImage: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=800&auto=format&fit=crop", itinerary: [], preTripChecklist: [] }
+                ]
+            };
+
+            const loadState = () => {
+                const storedData = localStorage.getItem('tripPlannerData');
+                state = storedData ? JSON.parse(storedData) : DUMMY_DATA;
+                if (!state.trips) state.trips = [];
+            };
+
+            const saveState = () => {
+                localStorage.setItem('tripPlannerData', JSON.stringify(state));
+            };
+            
+            // --- UI HELPERS ---
+            const formatDate = (dateString) => {
+                if (!dateString) return 'N/A';
+                return new Date(dateString).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            };
+
+            // --- NAVIGATION ---
+            const pages = document.querySelectorAll('.page');
+            const navigate = (pageId, tripId = null) => {
+                state.selectedTripId = tripId;
+                pages.forEach(p => p.classList.toggle('active', p.id === `${pageId}-page`));
+                
+                if(pageId === 'dashboard') renderDashboard();
+                if(pageId === 'trip-detail' && tripId) {
+                    const trip = state.trips.find(t => t.id === tripId);
+                    if(trip) renderTripDetail(trip);
+                }
+                if(pageId === 'settings') renderSettings();
+                window.scrollTo(0, 0);
+            };
+
+            // --- RENDERING ---
+            const renderDashboard = () => {
+                const today = new Date().toISOString().split('T')[0];
+                const upcomingTrips = state.trips.filter(t => t.endDate >= today).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                const pastTrips = state.trips.filter(t => t.endDate < today).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+                const upcomingGrid = document.getElementById('upcoming-trips-grid');
+                const pastGrid = document.getElementById('past-trips-grid');
+
+                upcomingGrid.innerHTML = upcomingTrips.length ? upcomingTrips.map(createTripCard).join('') : `<p class="text-slate-500 italic text-center md:col-span-2 lg:col-span-3 py-8">No upcoming trips. Let's plan an adventure!</p>`;
+                pastGrid.innerHTML = pastTrips.length ? pastTrips.map(t => createTripCard(t, true)).join('') : `<p class="text-slate-500 italic text-center md:col-span-2 lg:col-span-4 py-8">Your past journeys will appear here.</p>`;
+
+                // Card animation observer
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.trip-card').forEach(card => observer.observe(card));
+            };
+
+            const createTripCard = (trip, isPast = false) => {
+                const today = new Date();
+                const startDate = new Date(trip.startDate);
+                const countdown = Math.ceil((startDate - today) / (1000 * 60 * 60 * 24));
+                return `
+                    <div class="trip-card bg-slate-800/50 border border-slate-700 rounded-xl shadow-lg hover:shadow-indigo-500/30 overflow-hidden cursor-pointer transition-all duration-300 transform hover:-translate-y-2 group" data-trip-id="${trip.id}">
+                        <div class="relative">
+                            <img src="${trip.bannerImage}" alt="${trip.destination}" class="h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='https://placehold.co/600x400/0f172a/334155?text=Image+Not+Found';">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                            ${!isPast && countdown > 0 ? `<div class="absolute top-3 right-3 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">${countdown} days to go</div>` : ''}
+                        </div>
+                        <div class="p-5">
+                            <h4 class="text-xl font-bold font-serif text-white truncate">${trip.destination}</h4>
+                            <p class="text-slate-400 text-sm mt-1">${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}</p>
+                        </div>
+                    </div>
+                `;
+            };
+
+            const renderTripDetail = (trip) => {
+                const container = document.getElementById('trip-detail-page');
+                const eventIcons = {
+                    Activity: '📋', Travel: '✈️', Accommodation: '🏨', Default: '📍'
+                };
+                
+                const createEventHTML = (event, day) => `
+                    <div class="bg-slate-800/60 p-4 rounded-lg flex gap-4 hover:bg-slate-800 transition-colors duration-200">
+                        <div class="w-16 text-center shrink-0">
+                            <div class="font-bold text-lg text-indigo-400">${event.time}</div>
+                            <div class="mt-2 text-2xl">${eventIcons[event.type] || eventIcons.Default}</div>
+                        </div>
+                        <div class="flex-grow">
+                            <h5 class="font-semibold text-white">${event.details}</h5>
+                            <p class="text-sm text-slate-400">${event.notes || ''}</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                             <button data-action="edit-event" data-day-date="${day.date}" data-event-id="${event.id}" class="p-1.5 text-slate-400 hover:text-blue-400 transition-colors rounded-full bg-slate-700/50 shadow-sm">✏️</button>
+                             <button data-action="delete-event" data-day-date="${day.date}" data-event-id="${event.id}" class="p-1.5 text-slate-400 hover:text-red-400 transition-colors rounded-full bg-slate-700/50 shadow-sm">🗑️</button>
+                        </div>
+                    </div>
+                `;
+
+                const createDailyChecklistHTML = (day) => {
+                    const items = (day.checklist || []).map(item => `
+                        <div class="flex items-center gap-2 group daily-checklist-item">
+                            <input type="checkbox" id="check-${item.id}" data-action="toggle-daily-check" data-day-date="${day.date}" data-check-id="${item.id}" ${item.completed ? 'checked' : ''} class="h-4 w-4 rounded border-slate-600 bg-slate-700 text-indigo-500 focus:ring-indigo-500 cursor-pointer">
+                            <label for="check-${item.id}" class="flex-grow text-sm ${item.completed ? 'line-through text-slate-500' : 'text-slate-300'}">${item.task}</label>
+                            <button data-action="delete-daily-check" data-day-date="${day.date}" data-check-id="${item.id}" class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500">🗑️</button>
+                        </div>
+                    `).join('');
+                    return `
+                        <div class="mt-6">
+                            <h5 class="font-semibold text-sm mb-2 text-slate-500 uppercase tracking-wider">Daily Checklist</h5>
+                            ${items}
+                            <form data-action="add-daily-check" data-day-date="${day.date}" class="flex gap-2 mt-2">
+                                <input name="task" placeholder="Add a quick task..." class="flex-grow bg-transparent text-sm p-1 border-b border-slate-600 focus:border-indigo-500 outline-none" required />
+                                <button type="submit" class="text-indigo-400 hover:text-indigo-300">➕</button>
+                            </form>
+                        </div>
+                    `;
+                };
+
+                const itineraryDays = useMemo(() => {
+                    const start = new Date(trip.startDate); const end = new Date(trip.endDate); const days = [];
+                    if (isNaN(start.getTime()) || isNaN(end.getTime())) return [];
+                    let current = new Date(start); let dayIndex = 1;
+                    while (current <= end) {
+                        const dateStr = current.toISOString().split('T')[0];
+                        const existingDayData = (trip.itinerary || []).find(d => d.date === dateStr);
+                        days.push({ day: dayIndex, date: dateStr, events: existingDayData?.events || [], checklist: existingDayData?.checklist || [] });
+                        current.setDate(current.getDate() + 1); dayIndex++;
+                    } return days;
+                }, [trip]);
+
+
+                const itineraryHTML = itineraryDays.map(day => `
+                    <div class="border-l-4 border-indigo-500/50 pl-6 relative">
+                        <div class="absolute -left-[1.55rem] top-0 bg-indigo-600 text-white w-12 h-12 rounded-full flex flex-col items-center justify-center shadow-lg ring-4 ring-slate-900">
+                           <span class="text-sm font-bold">Day</span>
+                           <span class="text-lg font-extrabold">${day.day}</span>
+                        </div>
+                        <h4 class="text-xl font-semibold mb-1 ml-4 text-white">${formatDate(day.date)}</h4>
+                        <p class="text-slate-400 text-sm mb-4 ml-4">${new Date(day.date).toLocaleDateString('en-GB', { weekday: 'long' })}</p>
+                        
+                        <div class="space-y-4">
+                            ${(day.events || []).sort((a,b) => a.time.localeCompare(b.time)).map(event => createEventHTML(event, day)).join('')}
+                        </div>
+                        ${createDailyChecklistHTML(day)}
+                        <div class="mt-4">
+                            <button data-action="add-event" data-day-date="${day.date}" class="form-button-secondary w-full">Add Event to Day ${day.day}</button>
+                        </div>
+                    </div>
+                `).join('<div class="h-8"></div>');
+
+                const preTripChecklistHTML = () => {
+                    const categories = ["Way Before", "1 Month Before", "1 Week Before", "The Day Before"];
+                    const { user1, user2 } = state.users;
+                    return `
+                    <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700 sticky top-24">
+                        <h3 class="text-2xl font-bold font-serif mb-4 text-white">Pre-Trip Prep</h3>
+                        <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
+                           ${categories.map(category => {
+                               const items = (trip.preTripChecklist || []).filter(item => item.category === category);
+                               if (items.length === 0) return '';
+                               return `<div>
+                                   <h4 class="font-semibold text-slate-400 border-b border-slate-700 pb-1 mb-2">${category}</h4>
+                                   <div class="space-y-2">
+                                   ${items.map(item => `
+                                       <div class="flex items-center gap-3 group">
+                                           <input type="checkbox" id="prep-${item.id}" data-action="toggle-prep-check" data-item-id="${item.id}" ${item.completed ? 'checked' : ''} class="h-5 w-5 rounded border-slate-600 bg-slate-700 text-indigo-500 focus:ring-indigo-500 cursor-pointer shrink-0" />
+                                           <label for="prep-${item.id}" class="flex-grow ${item.completed ? 'line-through text-slate-500' : 'text-slate-200'}">${item.task}</label>
+                                           <span class="text-xs px-2 py-0.5 rounded-full ${item.assignedTo === user1.name ? 'bg-blue-900/50 text-blue-300' : 'bg-pink-900/50 text-pink-300'}">${item.assignedTo}</span>
+                                           <button data-action="delete-prep-check" data-item-id="${item.id}" class="opacity-0 group-hover:opacity-100 transition-opacity text-slate-400 hover:text-red-500">🗑️</button>
+                                       </div>
+                                   `).join('')}
+                                   </div>
+                               </div>`
+                           }).join('')}
+                        </div>
+                        <div class="mt-6 border-t border-slate-700 pt-4">
+                             <h4 class="font-semibold mb-2 text-white">Add New Item</h4>
+                             <form id="add-prep-item-form" class="space-y-3">
+                                 <input name="task" placeholder="e.g., Book travel insurance" class="form-input" required />
+                                 <div class="grid grid-cols-2 gap-2">
+                                    <select name="category" class="form-input">${categories.map(c => `<option>${c}</option>`).join('')}</select>
+                                    <select name="assignedTo" class="form-input"><option value="${user1.name}">${user1.name}</option><option value="${user2.name}">${user2.name}</option></select>
+                                 </div>
+                                 <button type="submit" class="form-button-secondary w-full">Add to Checklist</button>
+                             </form>
+                        </div>
+                    </div>
+                    `
+                };
+                
+                container.innerHTML = `
+                    <button id="back-to-dashboard" class="form-button-secondary mb-6">← Back to Dashboard</button>
+                    <div class="relative h-64 md:h-96 rounded-2xl overflow-hidden mb-8 shadow-xl group">
+                        <img src="${trip.bannerImage}" alt="${trip.destination}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError="this.onerror=null;this.src='https://placehold.co/1200x400/0f172a/334155?text=Image+Not+Found';">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex items-end p-8">
+                            <div>
+                                <h2 class="text-4xl md:text-6xl font-black font-serif text-white tracking-tight">${trip.destination}</h2>
+                                <p class="text-lg text-indigo-300 mt-1">${formatDate(trip.startDate)} - ${formatDate(trip.endDate)}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-8">${itineraryHTML}</div>
+                        <div>
+                            ${preTripChecklistHTML()}
+                            <div class="mt-8">
+                                <button id="delete-trip-btn" class="bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30 hover:text-red-200 w-full px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-200">Delete This Trip</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            const renderSettings = () => {
+                const { user1, user2 } = state.users;
+                document.getElementById('user1Name').value = user1.name;
+                document.getElementById('user1Base').value = user1.homeBase;
+                document.getElementById('user2Name').value = user2.name;
+                document.getElementById('user2Base').value = user2.homeBase;
+            };
+
+            // --- MODAL LOGIC ---
+            const modalContainer = document.getElementById('modal-container');
+            const modalBox = document.getElementById('modal-box');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+
+            const openModal = (title, contentHTML) => {
+                modalTitle.textContent = title;
+                modalContent.innerHTML = contentHTML;
+                modalContainer.classList.remove('hidden');
+                modalContainer.classList.add('flex');
+                setTimeout(() => modalContainer.classList.add('open'), 10);
+            };
+
+            const closeModal = () => {
+                modalContainer.classList.remove('open');
+                setTimeout(() => {
+                    modalContainer.classList.add('hidden');
+                    modalContainer.classList.remove('flex');
+                    modalContent.innerHTML = '';
+                }, 300);
+            };
+
+            document.getElementById('modal-close-btn').onclick = closeModal;
+            modalContainer.onclick = (e) => { if(e.target === modalContainer) closeModal(); };
+
+            // --- EVENT LISTENERS ---
+            document.querySelector('body').addEventListener('click', (e) => {
+                // Navigation
+                const navButton = e.target.closest('.nav-button');
+                if (navButton) navigate(navButton.dataset.page);
+                if (e.target.closest('#logo-button')) navigate('dashboard');
+                if (e.target.id === 'back-to-dashboard') navigate('dashboard');
+
+                // Trip Card click
+                const tripCard = e.target.closest('.trip-card');
+                if(tripCard) navigate('trip-detail', tripCard.dataset.tripId);
+                
+                // Dashboard actions
+                if (e.target.closest('#add-trip-btn')) {
+                    openModal('Plan a New Voyage', `
+                        <form id="add-trip-form" class="space-y-6">
+                            <div>
+                                <label for="destination" class="block text-sm font-medium text-slate-300 mb-2">Destination</label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" /></svg>
+                                    </div>
+                                    <input id="destination" name="destination" placeholder="e.g., Kyoto, Japan" class="form-input pl-10" required />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="startDate" class="block text-sm font-medium text-slate-300 mb-2">Start Date</label>
+                                    <div class="relative">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg></div>
+                                        <input id="startDate" name="startDate" type="date" class="form-input pl-10" required />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="endDate" class="block text-sm font-medium text-slate-300 mb-2">End Date</label>
+                                    <div class="relative">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" /></svg></div>
+                                        <input id="endDate" name="endDate" type="date" class="form-input pl-10" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="bannerImage" class="block text-sm font-medium text-slate-300 mb-2">Banner Image URL <span class="text-xs text-slate-400">(Optional)</span></label>
+                                <div class="relative">
+                                    <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                        <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" /></svg>
+                                    </div>
+                                    <input id="bannerImage" name="bannerImage" placeholder="https://images.unsplash.com/..." class="form-input pl-10" />
+                                </div>
+                            </div>
+                            <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary w-full sm:w-auto">Create Trip</button></div>
+                        </form>
+                    `);
+                    // We must apply the styles again for the dynamically created inputs
+                    document.querySelectorAll('#add-trip-form .form-input').forEach(el => { if(!el.classList.contains('pl-10')) el.className = formInputClasses; else el.className = formInputClasses + " pl-10"; });
+                    document.querySelector('#add-trip-form .form-button-primary').className = formButtonPrimaryClasses;
+                }
+
+                // Settings actions
+                if(e.target.id === 'save-settings-btn') {
+                    state.users.user1.name = document.getElementById('user1Name').value;
+                    state.users.user1.homeBase = document.getElementById('user1Base').value;
+                    state.users.user2.name = document.getElementById('user2Name').value;
+                    state.users.user2.homeBase = document.getElementById('user2Base').value;
+                    saveState();
+                    alert('Settings Saved!');
+                }
+
+                if (e.target.id === 'delete-trip-btn') {
+                    if(confirm('Are you sure you want to permanently delete this trip?')){
+                        state.trips = state.trips.filter(t => t.id !== state.selectedTripId);
+                        saveState();
+                        navigate('dashboard');
+                    }
+                }
+                
+                // Trip Detail Actions
+                const actionTarget = e.target.closest('[data-action]');
+                if (actionTarget) {
+                    const { action, dayDate, eventId, itemId, checkId } = actionTarget.dataset;
+                    const trip = state.trips.find(t => t.id === state.selectedTripId);
+                    if(!trip) return;
+                    
+                    const getDay = (date) => {
+                        let day = trip.itinerary.find(d => d.date === date);
+                        if(!day) {
+                            const dayNumber = (new Date(date) - new Date(trip.startDate)) / (1000 * 60 * 60 * 24) + 1;
+                            day = { day: dayNumber, date, events: [], checklist: [] };
+                            trip.itinerary.push(day);
+                        }
+                        return day;
+                    };
+                    
+                    if (action === 'add-event') {
+                        openModal('Add Itinerary Event', `
+                            <form id="add-event-form" data-day-date="${dayDate}" class="space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="eventTime" class="block text-sm font-medium text-slate-300 mb-2">Time</label>
+                                        <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg></div><input id="eventTime" name="time" type="time" class="form-input pl-10" required /></div>
+                                    </div>
+                                    <div>
+                                        <label for="eventType" class="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                                        <select id="eventType" name="type" class="form-input"><option>Activity</option><option>Travel</option><option>Accommodation</option></select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="eventDetails" class="block text-sm font-medium text-slate-300 mb-2">Details</label>
+                                    <input id="eventDetails" name="details" placeholder="e.g., Visit the Eiffel Tower" class="form-input" required />
+                                </div>
+                                <div>
+                                    <label for="eventNotes" class="block text-sm font-medium text-slate-300 mb-2">Notes <span class="text-xs text-slate-400">(Optional)</span></label>
+                                    <input id="eventNotes" name="notes" placeholder="e.g., Booking ref, address, etc." class="form-input" />
+                                </div>
+                                <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary">Add Event</button></div>
+                            </form>
+                        `);
+                    } else if (action === 'edit-event') {
+                        const day = getDay(dayDate);
+                        const event = day.events.find(e => e.id == eventId);
+                        openModal('Edit Itinerary Event', `
+                            <form id="edit-event-form" data-day-date="${dayDate}" data-event-id="${eventId}" class="space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="eventTime" class="block text-sm font-medium text-slate-300 mb-2">Time</label>
+                                        <div class="relative"><div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"><svg class="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg></div><input id="eventTime" name="time" type="time" class="form-input pl-10" value="${event.time}" required /></div>
+                                    </div>
+                                    <div>
+                                        <label for="eventType" class="block text-sm font-medium text-slate-300 mb-2">Type</label>
+                                        <select id="eventType" name="type" class="form-input">
+                                            <option ${event.type === 'Activity' ? 'selected' : ''}>Activity</option>
+                                            <option ${event.type === 'Travel' ? 'selected' : ''}>Travel</option>
+                                            <option ${event.type === 'Accommodation' ? 'selected' : ''}>Accommodation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="eventDetails" class="block text-sm font-medium text-slate-300 mb-2">Details</label>
+                                    <input id="eventDetails" name="details" placeholder="e.g., Visit the Eiffel Tower" class="form-input" value="${event.details}" required />
+                                </div>
+                                <div>
+                                    <label for="eventNotes" class="block text-sm font-medium text-slate-300 mb-2">Notes <span class="text-xs text-slate-400">(Optional)</span></label>
+                                    <input id="eventNotes" name="notes" placeholder="e.g., Booking ref, address, etc." class="form-input" value="${event.notes || ''}" />
+                                </div>
+                                <div class="flex justify-end pt-4"><button type="submit" class="form-button-primary">Save Changes</button></div>
+                            </form>
+                        `);
+                    } 
+                    if (action === 'add-event' || action === 'edit-event') {
+                        // Re-apply styles for dynamically generated modals
+                        document.querySelectorAll('.modal-box .form-input').forEach(el => { if(!el.classList.contains('pl-10')) el.className = formInputClasses; else el.className = formInputClasses + " pl-10"; });
+                        document.querySelector('.modal-box .form-button-primary').className = formButtonPrimaryClasses;
+                    }
+                    else if (action === 'delete-event') {
+                         const day = getDay(dayDate);
+                         day.events = day.events.filter(e => e.id != eventId);
+                         saveState(); renderTripDetail(trip);
+                    } else if (action === 'toggle-prep-check') {
+                        const item = trip.preTripChecklist.find(i => i.id == itemId);
+                        if (item) item.completed = e.target.checked;
+                        saveState(); renderTripDetail(trip);
+                    } else if (action === 'delete-prep-check') {
+                         trip.preTripChecklist = trip.preTripChecklist.filter(i => i.id != itemId);
+                         saveState(); renderTripDetail(trip);
+                    } else if (action === 'toggle-daily-check') {
+                        const day = getDay(dayDate);
+                        const item = day.checklist.find(c => c.id == checkId);
+                        if(item) item.completed = e.target.checked;
+                        saveState(); renderTripDetail(trip);
+                    } else if (action === 'delete-daily-check') {
+                        const day = getDay(dayDate);
+                        day.checklist = day.checklist.filter(c => c.id != checkId);
+                        saveState(); renderTripDetail(trip);
+                    }
+                }
+            });
+
+            document.querySelector('body').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const trip = state.trips.find(t => t.id === state.selectedTripId);
+
+                if (form.id === 'add-trip-form') {
+                    const fd = new FormData(form);
+                    state.trips.push({
+                        id: `trip-${Date.now()}`,
+                        destination: fd.get('destination'), startDate: fd.get('startDate'), endDate: fd.get('endDate'),
+                        bannerImage: fd.get('bannerImage') || `https://placehold.co/800x400/1e293b/94a3b8?text=${fd.get('destination').split(',')[0]}`,
+                        itinerary: [], preTripChecklist: []
+                    });
+                    saveState();
+                    closeModal();
+                    renderDashboard();
+                } else if (form.id === 'add-prep-item-form') {
+                    const fd = new FormData(form);
+                    if (!trip.preTripChecklist) trip.preTripChecklist = [];
+                    trip.preTripChecklist.push({
+                        id: Date.now(), task: fd.get('task'), category: fd.get('category'), assignedTo: fd.get('assignedTo'), completed: false
+                    });
+                    saveState();
+                    renderTripDetail(trip);
+                    form.reset();
+                } else if (form.dataset.action === 'add-daily-check') {
+                     const day = trip.itinerary.find(d => d.date === form.dataset.dayDate) || { date: form.dataset.dayDate, events: [], checklist: []};
+                     if (!trip.itinerary.some(d=>d.date === form.dataset.dayDate)) trip.itinerary.push(day);
+                     day.checklist.push({ id: Date.now(), task: form.task.value, completed: false });
+                     saveState();
+                     renderTripDetail(trip);
+                } else if(form.id === 'add-event-form' || form.id === 'edit-event-form'){
+                     const dayDate = form.dataset.dayDate;
+                     const eventId = form.dataset.eventId;
+                     const fd = new FormData(form);
+                     const eventData = {type: fd.get('type'), time: fd.get('time'), details: fd.get('details'), notes: fd.get('notes')};
+                     
+                     let day = trip.itinerary.find(d => d.date === dayDate);
+                     if (!day) { // create day if it doesn't exist
+                        const dayNumber = (new Date(dayDate) - new Date(trip.startDate)) / (1000 * 60 * 60 * 24) + 1;
+                        day = { day: dayNumber, date: dayDate, events: [], checklist: [] };
+                        trip.itinerary.push(day);
+                     }
+                     
+                     if (form.id === 'edit-event-form') { // Editing
+                        const eventIndex = day.events.findIndex(e => e.id == eventId);
+                        day.events[eventIndex] = { ...day.events[eventIndex], ...eventData };
+                     } else { // Adding
+                         day.events.push({ id: Date.now(), ...eventData });
+                     }
+                     saveState();
+                     closeModal();
+                     renderTripDetail(trip);
+                }
+            });
+
+            // Data Import/Export
+            document.getElementById('export-data-btn').onclick = () => {
+                const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(state))}`;
+                const link = document.createElement('a');
+                link.href = jsonString;
+                link.download = 'CompanionAtlas_Export.json';
+                link.click();
+            };
+
+            document.getElementById('import-file').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const importedData = JSON.parse(event.target.result);
+                            if (importedData && importedData.users && importedData.trips) {
+                                state = importedData;
+                                saveState();
+                                alert('Data imported successfully!');
+                                navigate('dashboard');
+                            } else {
+                                alert('Invalid data file.');
+                            }
+                        } catch (error) {
+                            alert('Error parsing file.');
+                        }
+                    };
+                    reader.readAsText(file);
+                    e.target.value = null;
+                }
+            };
+            
+            // --- INITIALIZATION ---
+            function useMemo(factory, deps) {
+                // A very simple polyfill for useMemo's logic for this specific case
+                return factory();
+            }
+
+            // Define CSS classes for reuse in JS
+            const formInputClasses = "form-input w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-white";
+            const formButtonPrimaryClasses = "form-button-primary bg-indigo-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 btn-glow";
+            const formButtonSecondaryClasses = "form-button-secondary bg-slate-700/50 border border-slate-600 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors";
+            
+            // Apply classes
+            document.querySelectorAll('.form-input').forEach(el => el.className = formInputClasses);
+            document.querySelectorAll('.form-button-primary').forEach(el => el.className = formButtonPrimaryClasses);
+            document.querySelectorAll('.form-button-secondary').forEach(el => el.className = formButtonSecondaryClasses);
+
+
+            loadState();
+            navigate('dashboard');
+        });
+    </script>
+</body>
+</html>
