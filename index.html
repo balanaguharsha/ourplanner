@@ -320,12 +320,12 @@
                         </div>
                     `).join('');
                     return `
-                        <div class="mt-6">
-                            <h5 class="font-semibold text-sm mb-2 text-slate-500 uppercase tracking-wider">Daily Checklist</h5>
-                            ${items}
-                            <form data-action="add-daily-check" data-day-date="${day.date}" class="flex gap-2 mt-2">
-                                <input name="task" placeholder="Add a quick task..." class="flex-grow bg-transparent text-sm p-1 border-b border-slate-600 focus:border-indigo-500 outline-none" required />
-                                <button type="submit" class="text-indigo-400 hover:text-indigo-300">➕</button>
+                        <div class="mt-4 border-t border-slate-700/50 pt-4">
+                            <h5 class="font-semibold text-sm mb-3 text-slate-500 uppercase tracking-wider">Daily Checklist</h5>
+                            <div class="space-y-2">${items}</div>
+                            <form data-action="add-daily-check" data-day-date="${day.date}" class="flex gap-2 mt-3">
+                                <input name="task" placeholder="Add a quick task..." class="form-input !px-2 !py-1 !text-sm flex-grow" required />
+                                <button type="submit" class="form-button-secondary !px-3 !py-1">Add</button>
                             </form>
                         </div>
                     `;
@@ -344,30 +344,36 @@
                 }, [trip]);
 
 
-                const itineraryHTML = itineraryDays.map(day => `
-                    <div class="border-l-4 border-indigo-500/50 pl-6 relative">
-                        <div class="absolute -left-[1.55rem] top-0 bg-indigo-600 text-white w-12 h-12 rounded-full flex flex-col items-center justify-center shadow-lg ring-4 ring-slate-900">
-                           <span class="text-sm font-bold">Day</span>
-                           <span class="text-lg font-extrabold">${day.day}</span>
+                const itineraryHTML = itineraryDays.map(day => {
+                    return `
+                        <div class="border-l-4 border-indigo-500/50 pl-6 relative">
+                            <div class="absolute -left-[1.8rem] top-0 bg-indigo-600 text-white w-14 h-14 rounded-full flex flex-col items-center justify-center shadow-lg ring-4 ring-slate-900">
+                               <span class="text-sm font-bold">Day</span>
+                               <span class="text-lg font-extrabold">${day.day}</span>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-xl font-semibold mb-1 text-white">${formatDate(day.date)}</h4>
+                                <p class="text-slate-400 text-sm mb-4">${new Date(day.date).toLocaleDateString('en-GB', { weekday: 'long' })}</p>
+                            
+                                <div class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-4 space-y-4">
+                                    ${day.events.length > 0 ? (day.events || []).sort((a,b) => a.time.localeCompare(b.time)).map(event => createEventHTML(event, day)).join('') : `<p class="text-center text-slate-500 py-4">No events planned for this day.</p>`}
+                                    
+                                    ${createDailyChecklistHTML(day)}
+                                    
+                                    <div class="mt-6">
+                                        <button data-action="add-event" data-day-date="${day.date}" class="form-button-secondary w-full">Add Event to Day ${day.day}</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <h4 class="text-xl font-semibold mb-1 ml-4 text-white">${formatDate(day.date)}</h4>
-                        <p class="text-slate-400 text-sm mb-4 ml-4">${new Date(day.date).toLocaleDateString('en-GB', { weekday: 'long' })}</p>
-                        
-                        <div class="space-y-4">
-                            ${(day.events || []).sort((a,b) => a.time.localeCompare(b.time)).map(event => createEventHTML(event, day)).join('')}
-                        </div>
-                        ${createDailyChecklistHTML(day)}
-                        <div class="mt-4">
-                            <button data-action="add-event" data-day-date="${day.date}" class="form-button-secondary w-full">Add Event to Day ${day.day}</button>
-                        </div>
-                    </div>
-                `).join('<div class="h-8"></div>');
+                    `;
+                }).join('<div class="h-8"></div>');
 
                 const preTripChecklistHTML = () => {
                     const categories = ["Way Before", "1 Month Before", "1 Week Before", "The Day Before"];
                     const { user1, user2 } = state.users;
                     return `
-                    <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700 sticky top-24">
+                    <div class="bg-slate-800/50 p-6 rounded-2xl shadow-lg border border-slate-700">
                         <h3 class="text-2xl font-bold font-serif mb-4 text-white">Pre-Trip Prep</h3>
                         <div class="space-y-4 max-h-96 overflow-y-auto pr-2">
                            ${categories.map(category => {
@@ -413,7 +419,7 @@
                 };
                 
                 container.innerHTML = `
-                    <button id="back-to-dashboard" class="form-button-secondary mb-6">← Back to Dashboard</button>
+                    <button id="back-to-dashboard" class="form-button-secondary mb-8">← Back to Dashboard</button>
                     <div class="relative h-64 md:h-96 rounded-2xl overflow-hidden mb-8 shadow-xl group">
                         <img src="${trip.bannerImage}" alt="${trip.destination}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onError="this.onerror=null;this.src='https://placehold.co/1200x400/0f172a/334155?text=Image+Not+Found';">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent flex items-end p-8">
@@ -430,16 +436,16 @@
                     </div>
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         <div class="lg:col-span-2 space-y-8">${itineraryHTML}</div>
-                        <div>
-                            ${preTripChecklistHTML()}
-                            <div class="mt-8">
-                                <button id="delete-trip-btn" class="bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30 hover:text-red-200 w-full px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-200">Delete This Trip</button>
+                        <div class="relative z-10">
+                            <div class="sticky top-24 space-y-8">
+                                ${preTripChecklistHTML()}
+                                <div>
+                                    <button id="delete-trip-btn" class="bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30 hover:text-red-200 w-full px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-200">Delete This Trip</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
-                // **THE FIX IS HERE**
-                // Apply styles to the newly rendered content, including the pre-trip form.
                 applyFormStyles(container);
             };
 
@@ -477,10 +483,19 @@
             const applyFormStyles = (containerElement) => {
                  containerElement.querySelectorAll('.form-input').forEach(el => { 
                     const hasIcon = el.classList.contains('pl-10');
-                    el.className = formInputClasses + (hasIcon ? " pl-10" : ""); 
+                    const hasSmallText = el.classList.contains('!text-sm');
+                    let baseClasses = formInputClasses;
+                    if(hasIcon) baseClasses += ' pl-10';
+                    if(hasSmallText) baseClasses += ' !px-2 !py-1 !text-sm';
+                    el.className = baseClasses;
                  });
                  containerElement.querySelectorAll('.form-button-primary').forEach(el => el.className = formButtonPrimaryClasses);
-                 containerElement.querySelectorAll('.form-button-secondary').forEach(el => el.className = formButtonSecondaryClasses);
+                 containerElement.querySelectorAll('.form-button-secondary').forEach(el => {
+                    const isSmall = el.classList.contains('!px-3');
+                    let baseClasses = formButtonSecondaryClasses;
+                    if (isSmall) baseClasses += ' !px-3 !py-1';
+                    el.className = baseClasses;
+                 });
             }
 
             document.getElementById('modal-close-btn').onclick = closeModal;
@@ -772,7 +787,7 @@
             }
 
             // Define CSS classes for reuse in JS
-            const formInputClasses = "form-input w-full px-4 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-white";
+            const formInputClasses = "form-input w-full px-3 py-2 bg-slate-700/50 border border-slate-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow text-white";
             const formButtonPrimaryClasses = "form-button-primary bg-indigo-600 text-white px-5 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-0.5 btn-glow";
             const formButtonSecondaryClasses = "form-button-secondary bg-slate-700/50 border border-slate-600 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors";
             
